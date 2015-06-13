@@ -54,7 +54,7 @@ class TestClass(TestCase):
 
             for perm2 in perms:
                 self.calls.create_folder(folder1)
-                resp = self.calls.set_perms(folder_path=folder_path1, users=self.config.puser, permission=perm)
+                resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm)
                 #assert resp.status_code == httplib.OK
                 #resp = self.calls.list_perms(folder_path=folder_path1, users=self.config.puser)
                 #assert resp.status_code == httplib.OK
@@ -62,7 +62,7 @@ class TestClass(TestCase):
                 #assert resp.json['users'][0]['subject'] == self.config.puser
                 #assert len(resp.json['groups']) == 0
                 self.calls.create_folder(folder2)
-                resp = self.calls.set_perms(folder_path=folder_path2, users=self.config.puser, permission=perm2)
+                resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission=perm2)
                 resp = self.calls.move_item(name=folder1, destination=folder2_path, username=self.config.puser)
                 assert resp.status_code == httplib.OK
                 assert resp.json == self.no_json
