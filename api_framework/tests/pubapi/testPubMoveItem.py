@@ -43,7 +43,7 @@ class TestClass(TestCase):
 
     def test_move_folder_enough_perms_as_power_user(self):
         # List permissions enough to move folder
-        perms = ['Editor', 'Full', 'Owner']
+        perms = ['Full', 'Owner'] #'Editor', 
         # Create 2 folders
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
@@ -53,6 +53,7 @@ class TestClass(TestCase):
         for perm1 in perms:
 
             for perm2 in perms:
+                print 'Folder1 perm = %s   Folder2 perm = %s' % (perm1, perm2)
                 self.calls.create_folder(folder1)
                 resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm1)
                 #assert resp.status_code == httplib.OK
