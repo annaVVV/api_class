@@ -43,27 +43,22 @@ class TestClass(TestCase):
 
     def test_move_folder_enough_perms_as_power_user(self):
         # List permissions enough to move folder
-        perms = ['Full', 'Owner'] #'Editor', 
+        perms = ['Full', 'Owner']
         # Create 2 folders
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
         folder1_path = '%s/%s' % (self.config.testpath, folder1)
-        folder = [folder1, folder2]
         for perm1 in perms:
 
             for perm2 in perms:
                 print 'Folder1 perm = %s   Folder2 perm = %s' % (perm1, perm2)
                 self.calls.create_folder(folder1)
                 resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm1)
-                #assert resp.status_code == httplib.OK
-                #resp = self.calls.list_perms(folder_path=folder_path1, users=self.config.puser)
-                #assert resp.status_code == httplib.OK
-                #assert resp.json['users'][0]['permission'] == perm
-                #assert resp.json['users'][0]['subject'] == self.config.puser
-                #assert len(resp.json['groups']) == 0
+                assert resp.status_code == httplib.OK
                 self.calls.create_folder(folder2)
                 resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission=perm2)
+                assert resp.status_code == httplib.OK
                 resp = self.calls.move_item(name=folder1, destination=folder2_path, username=self.config.puser)
                 assert resp.status_code == httplib.OK
                 assert resp.json == self.no_json
@@ -73,6 +68,25 @@ class TestClass(TestCase):
                 assert resp.status_code == httplib.NOT_FOUND
                 self.calls.delete_folder(folder2)
 
-
+    def test_move_not_enough_perms_folder1(self):
+        folder1 = self.utils.random_name()
+        folder2 = self.utils.random_name()
+        folder2_path = '%s/%s' % (self.config.testpath, folder2)
+        folder1_path = '%s/%s' % (self.config.testpath, folder1)
+        # Permissions for puser on Folder1 = >> FORBIDDEN
+        perms = ['None', 'Viewer', 'Editor']
+        self.calls.create_folder(folder2)
+         # Permissions for puser on Folder2 = 'Full'
+        resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission='Full')
+        assert resp.status_code == httplib.OK
+        for perm in perms:
+            self.calls.create_folder(folder1)
+            resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm)
+            assert resp.status_code == httplib.OK
+            resp = self.calls.move_item(name=folder1, destination=folder2_path, username=self.config.puser)
+            assert resp.status_code == httplib.FORBIDDEN
+            assert resp.json['errorMessage'] == 'You do not have permission to perform this action'
+            self.calls.delete_folder(folder1)
+        self.calls.delete_folder(folder1)
 
 
