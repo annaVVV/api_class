@@ -118,4 +118,3 @@ class TestClass(TestCase):
             self.calls.delete_folder(folder2)
         self.calls.delete_folder(folder1)
 
-TestClass.test_move_folder_positive()
