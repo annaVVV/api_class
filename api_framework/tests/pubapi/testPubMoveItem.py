@@ -54,7 +54,7 @@ class TestClass(TestCase):
 
             for perm2 in perms:
                 self.calls.create_folder(folder1)
-                resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm)
+                resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm1)
                 #assert resp.status_code == httplib.OK
                 #resp = self.calls.list_perms(folder_path=folder_path1, users=self.config.puser)
                 #assert resp.status_code == httplib.OK
