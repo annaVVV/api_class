@@ -19,7 +19,7 @@ class TestClass(TestCase):
         self.utils.delete_all_except(['Documents'])
 
     def test_move_folder_positive(self):
-        print "=======test_move_folder_positive============="
+        print "======= test_move_folder_positive ======"
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
@@ -35,7 +35,7 @@ class TestClass(TestCase):
         assert resp.status_code == httplib.NOT_FOUND
 
     def test_move_non_existent_folder(self):
-        print "======test_move_non_existent_folder=========="
+        print "==== test_move_non_existent_folder ======="
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder1_path = '%s/%s' % (self.config.testpath, folder1)
@@ -45,7 +45,7 @@ class TestClass(TestCase):
         assert resp.json['errorMessage'] == "Source path for move doesn't exist"
 
     def test_move_folder_enough_perms_as_power_user(self):
-        print "========test_move_folder_enough_perms_as_power_user============"
+        print "=== test_move_folder_enough_perms_as_power_user======"
         # List permissions enough to move folder
         perms = ['Full', 'Owner']
         # Create 2 folders
@@ -117,3 +117,5 @@ class TestClass(TestCase):
             assert resp.json['errorMessage'] == 'You do not have permission to perform this action'
             self.calls.delete_folder(folder2)
         self.calls.delete_folder(folder1)
+
+TestClass.test_move_folder_positive()
