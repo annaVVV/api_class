@@ -19,7 +19,7 @@ class TestClass(TestCase):
         self.utils.delete_all_except(['Documents'])
 
     def test_move_folder_positive(self):
-        print "=========================test_move_folder_positive==========================="
+        print "=======test_move_folder_positive============="
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
@@ -35,7 +35,7 @@ class TestClass(TestCase):
         assert resp.status_code == httplib.NOT_FOUND
 
     def test_move_non_existent_folder(self):
-        print "===============================test_move_non_existent_folder================================="
+        print "======test_move_non_existent_folder=========="
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder1_path = '%s/%s' % (self.config.testpath, folder1)
@@ -45,7 +45,7 @@ class TestClass(TestCase):
         assert resp.json['errorMessage'] == "Source path for move doesn't exist"
 
     def test_move_folder_enough_perms_as_power_user(self):
-        print "=======================test_move_folder_enough_perms_as_power_user================================"
+        print "========test_move_folder_enough_perms_as_power_user============"
         # List permissions enough to move folder
         perms = ['Full', 'Owner']
         # Create 2 folders
@@ -56,7 +56,7 @@ class TestClass(TestCase):
         for perm1 in perms:
 
             for perm2 in perms:
-                print 'Folder1 perm = %s   Folder2 perm = %s' % (perm1, perm2)
+                print '>>>>>>>>>>>>>>>Folder1 perm = %s   Folder2 perm = %s' % (perm1, perm2)
                 self.calls.create_folder(folder1)
                 resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm1)
                 assert resp.status_code == httplib.OK
@@ -73,7 +73,7 @@ class TestClass(TestCase):
                 self.calls.delete_folder(folder2)
 
     def test_move_not_enough_perms_folder1(self):
-        print "=================test_move_not_enough_perms_folder1==============================="
+        print "========test_move_not_enough_perms_folder1======="
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
@@ -85,7 +85,7 @@ class TestClass(TestCase):
         resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission='Full')
         assert resp.status_code == httplib.OK
         for perm in perms:
-            print '>>>>>>>>>>>>>>>>Folder1 perm = %s   Folder2 perm = Full' % (perm)
+            print '>>>>>Folder1 perm = %s   Folder2 perm = Full' % (perm)
             self.calls.create_folder(folder1)
             resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm)
             assert resp.status_code == httplib.OK
@@ -96,7 +96,7 @@ class TestClass(TestCase):
         self.calls.delete_folder(folder2)
 
     def test_move_not_enough_perms_folder2(self):
-        print "==========================test_move_not_enough_perms_folder2======================"
+        print "======test_move_not_enough_perms_folder2=============="
         folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
@@ -108,7 +108,7 @@ class TestClass(TestCase):
         # Permissions for puser on Folder2 = >> FORBIDDEN
         perms = ['None', 'Viewer'] #, 'Editor']
         for perm in perms:
-            print ' >>>>>>>>>>>>>>>>> Folder1 perm = Full   Folder2 perm = %s' % (perm)
+            print ' >>>>>> Folder1 perm = Full   Folder2 perm = %s' % (perm)
             self.calls.create_folder(folder2)
             resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission=perm)
             assert resp.status_code == httplib.OK
