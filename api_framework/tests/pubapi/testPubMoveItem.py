@@ -70,8 +70,8 @@ class TestClass(TestCase):
                 self.calls.delete_folder(folder2)
 
     def test_move_not_enough_perms_folder1(self):
-         print "============================================================================="
-       folder1 = self.utils.random_name()
+        print "============================================================================="
+        folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
         folder1_path = '%s/%s' % (self.config.testpath, folder1)
