@@ -42,6 +42,7 @@ class TestClass(TestCase):
         assert resp.json['errorMessage'] == "Source path for move doesn't exist"
 
     def test_move_folder_enough_perms_as_power_user(self):
+        print "============================================================================="
         # List permissions enough to move folder
         perms = ['Full', 'Owner']
         # Create 2 folders
@@ -69,7 +70,8 @@ class TestClass(TestCase):
                 self.calls.delete_folder(folder2)
 
     def test_move_not_enough_perms_folder1(self):
-        folder1 = self.utils.random_name()
+         print "============================================================================="
+       folder1 = self.utils.random_name()
         folder2 = self.utils.random_name()
         folder2_path = '%s/%s' % (self.config.testpath, folder2)
         folder1_path = '%s/%s' % (self.config.testpath, folder1)
@@ -80,6 +82,7 @@ class TestClass(TestCase):
         resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission='Full')
         assert resp.status_code == httplib.OK
         for perm in perms:
+            print 'Folder1 perm = %s   Folder2 perm = Full' % (perm)
             self.calls.create_folder(folder1)
             resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission=perm)
             assert resp.status_code == httplib.OK
@@ -87,6 +90,27 @@ class TestClass(TestCase):
             assert resp.status_code == httplib.FORBIDDEN
             assert resp.json['errorMessage'] == 'You do not have permission to perform this action'
             self.calls.delete_folder(folder1)
+        self.calls.delete_folder(folder2)
+
+    def test_move_not_enough_perms_folder2(self):
+        print "============================================================================="
+        folder1 = self.utils.random_name()
+        folder2 = self.utils.random_name()
+        folder2_path = '%s/%s' % (self.config.testpath, folder2)
+        folder1_path = '%s/%s' % (self.config.testpath, folder1)
+        # Permissions for puser on Folder1 = 'Full'
+        self.calls.create_folder(folder1)
+        resp = self.calls.set_perms(folder_path=folder1_path, users=self.config.puser, permission='Full')
+        assert resp.status_code == httplib.OK
+        # Permissions for puser on Folder2 = >> FORBIDDEN
+        perms = ['None', 'Viewer', 'Editor']
+        for perm in perms:
+            print 'Folder1 perm = Full   Folder2 perm = %s' % (perm)
+            self.calls.create_folder(folder2)
+            resp = self.calls.set_perms(folder_path=folder2_path, users=self.config.puser, permission=perm)
+            assert resp.status_code == httplib.OK
+            resp = self.calls.move_item(name=folder1, destination=folder2_path, username=self.config.puser)
+            assert resp.status_code == httplib.FORBIDDEN
+            assert resp.json['errorMessage'] == 'You do not have permission to perform this action'
+            self.calls.delete_folder(folder2)
         self.calls.delete_folder(folder1)
-
-
